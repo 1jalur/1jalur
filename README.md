@@ -1,79 +1,81 @@
 # PRODUKSI (Manufactur)
 
-Aplikasi manajemen produksi: timeline proyek, absensi tim, RAP awal/akhir, stok gudang, belanja,
-operasional (SOP, surat jalan, QC, reimburse), dan investasi. Data disimpan di browser dan
-dicadangkan otomatis ke **Google Drive** lewat Google Apps Script.
+Aplikasi manajemen produksi: timeline proyek, absensi tim (+ catatan kegiatan harian dan lembur), RAP awal/akhir,
+stok gudang, belanja, operasional (SOP, surat jalan, QC, reimburse), dan investasi.
+Data, akun pengguna, dan foto disimpan di **Google Drive** lewat Google Apps Script. Situs ini statis (tanpa build).
 
-Aplikasi ini situs statis: tanpa build, tanpa framework. Cukup HTML, CSS, dan JavaScript biasa.
+## Cara akses
+
+| Siapa | Cara masuk | Hak |
+|---|---|---|
+| Pengguna biasa | Nama pengguna + kata sandi yang dibuat admin | **Hanya lihat** (bawaan). Admin boleh menjadikannya **Staf** (input dan edit data). |
+| Admin | Tombol **Masuk dengan Google**, hanya akun `1jalurproduksi@gmail.com` | Semua hak: kelola pengguna, Google Drive, simpan data |
+| Pemilik (darurat) | Buka `alamat-situs/#pemilik`, isi `TOKEN` dari Kode.gs | Setara admin. Dipakai jika login Google belum diatur atau bermasalah |
+
+Pengguna tidak pernah mengetik URL server atau kode rahasia. Kata sandi diperiksa di server (Kode.gs), bukan di browser.
+Hak akses dijaga di server: sesi Hanya lihat ditolak jika mencoba menyimpan, walau aplikasinya dimodifikasi.
 
 ## Struktur
 
 ```
 index.html            Kerangka halaman dan urutan pemuatan file
-css/
-  base.css            Token warna, mode gelap, reset
-  layout.css          Sidebar, menu, header
-  dashboard.css       Kartu, banner, grafik
-  components.css      Tombol, tabel, form, dialog
-  gantt.css           Timeline dan absensi
-  pages.css           Editor SOP, tabel khusus, status investasi
-  login.css           Login dan manajemen pengguna
-  responsive.css      Layar kecil (harus dimuat paling akhir)
-img/                  Logo, favicon, latar login
+css/                  base, layout, dashboard, components, gantt, pages, login, responsive (responsive.css harus terakhir)
+img/                  Logo, favicon, foto latar login (login-bg.jpg)
 js/
-  config.js           URL Web App (opsional)
+  config.js           URL server dan Client ID Google (diisi admin)
   core/               Data, penyimpanan, kolom, konstanta, router, registry halaman
-  components/         Tabel, Gantt, folder, cetak, form material
+  components/         Tabel, Gantt, folder, cetak, form material, kotak cari
   pages/              Satu file per halaman / fitur
-  services/           Sinkron Google Drive, login, mode Hanya lihat, foto (IndexedDB)
+  services/           drive-sync.js (sinkron), auth.js (login dan pengguna), viewer-mode.js, idb.js
   main.js             Titik mulai (dimuat terakhir)
-gas/Kode.gs           Skrip Google Apps Script (tempel di script.google.com, bukan dijalankan di sini)
+gas/Kode.gs           Skrip Google Apps Script (ditempel di script.google.com)
 ```
 
-## Aturan penting
+Urutan `<script>` di `index.html` tidak boleh diubah sembarangan (semua file memakai fungsi global yang sama;
+`core/registry.js` setelah semua `pages/`, `main.js` paling akhir).
 
-- **Urutan `<script>` di `index.html` tidak boleh diubah sembarangan.** Semua file memakai
-  variabel dan fungsi global yang sama (bukan ES module), karena tombol di halaman memanggil fungsi
-  lewat `onclick`. Aturan umum: `core` dulu, lalu `components`, `pages`, `services`, dan `main.js` terakhir.
-- `core/registry.js` memuat daftar halaman (`PG`), jadi harus dimuat **setelah** semua file di `pages/`.
-- Menambah halaman baru: buat `js/pages/nama.js`, daftarkan di `PG` (`core/registry.js`) dan `MENU`
-  (`core/constants.js`), lalu tambahkan `<script>`-nya di `index.html` sebelum `core/registry.js`.
-- `responsive.css` harus tetap paling akhir, dan `gantt.css` harus sebelum `login.css`
-  (kelas `.lgd` dipakai di keduanya).
+## Pemasangan (sekali saja)
+
+### 1. Apps Script
+1. Buka script.google.com dengan akun **1jalurproduksi@gmail.com**, buat proyek, tempel isi `gas/Kode.gs`.
+2. Ganti `TOKEN` (minimal 6 karakter, rahasia). `GOOGLE_CLIENT_ID` diisi pada langkah 2.
+3. Jalankan fungsi **`pasang`** dan izinkan semua akses, termasuk "koneksi ke layanan eksternal" (untuk login Google).
+   Akun lama (jika ada) otomatis dipindah ke server: admin lama menjadi **Staf**, pengguna lain tetap dengan kata sandi yang sama.
+   Salinan pengaman data dibuat di folder Drive `Pengaman`.
+4. **Deploy > Deployment baru > Aplikasi web**: Jalankan sebagai **Saya**, akses **Siapa saja**. Salin URL `/exec`.
+   (Jika sudah ada deployment: **Kelola deployment > pensil > Versi baru**; URL tetap sama.)
+5. Cek: `URL_WEB_APP?action=versi` harus menampilkan `"versi":"3.0.0-akun"`.
+
+### 2. Login Google admin
+1. Buka console.cloud.google.com dengan akun 1jalurproduksi@gmail.com, buat proyek baru.
+2. **APIs & Services > OAuth consent screen** (atau *Google Auth Platform*): tipe **External**, isi nama aplikasi dan email.
+   Jika statusnya *Testing*, tambahkan 1jalurproduksi@gmail.com sebagai **Test user**.
+3. **Credentials > Create credentials > OAuth client ID > Web application**.
+   Pada **Authorized JavaScript origins** tambahkan alamat situs, misalnya `https://1jalurpro.vercel.app`
+   (tanpa garis miring di ujung; tambahkan juga alamat lain yang dipakai). Perubahan bisa butuh beberapa menit.
+4. Salin **Client ID** (berakhiran `.apps.googleusercontent.com`) ke dua tempat:
+   `GOOGLE_CLIENT_ID` di `gas/Kode.gs` (lalu terbitkan ulang versi baru) dan `window.GOOGLE_CLIENT_ID` di `js/config.js`.
+
+### 3. Situs
+Isi `js/config.js` (`window.GAS_URL` = URL `/exec`, `window.GOOGLE_CLIENT_ID`), unggah ke GitHub, tunggu deploy,
+lalu **Ctrl+F5**. Setelah mengubah CSS/JS, naikkan nomor versi: `sed -i 's/?v=1.0.5/?v=1.0.6/g' index.html`.
+
+## Mengelola pengguna
+Masuk sebagai admin > **Pengguna**: tambah akun (otomatis Hanya lihat), ubah peran (Hanya lihat / Staf), ubah kata sandi,
+hapus. Lupa kata sandi pengguna: admin cukup **Ubah sandi**. Pengguna bisa mengganti sandinya sendiri (tombol **Ganti sandi**).
+Salah kata sandi 5 kali mengunci akun itu 10 menit.
+
+## Jika admin terkunci
+Buka `alamat-situs/#pemilik` dan masukkan `TOKEN`. Untuk mengeluarkan semua orang yang sedang login, jalankan
+fungsi `resetSemuaSesi` di Apps Script. Jika `TOKEN` bocor, ganti dan terbitkan ulang.
 
 ## Menjalankan di komputer
-
 ```bash
-python3 -m http.server 8080
-# buka http://localhost:8080
+python3 -m http.server 8080   # lalu buka http://localhost:8080
 ```
-
-## Deploy
-
-**Netlify dari GitHub (disarankan):** Add new site > Import an existing project > pilih repo ini.
-Build command dikosongkan, publish directory `.` (sudah diatur di `netlify.toml`). Setiap `git push`
-ke branch `main` otomatis menerbitkan versi baru.
-
-**GitHub Pages:** Settings > Pages > Deploy from a branch > `main` / root.
-
-Setelah mengubah CSS atau JS, naikkan nomor versi agar browser tidak memakai cache lama:
-
-```bash
-sed -i 's/?v=1.0.0/?v=1.0.1/g' index.html
-```
-
-## Hubungkan ke Google Drive
-
-1. Buka script.google.com, buat proyek baru, tempel isi `gas/Kode.gs`.
-2. Ganti `TOKEN` (kode rahasia utama) dan `TOKEN_BACA` (kode baca) dengan kode Anda sendiri.
-3. Jalankan fungsi `pasang`, lalu Deploy > Deployment baru > Aplikasi web (akses: Siapa saja).
-4. Salin URL berakhiran `/exec`. Di aplikasi, klik tombol **Google Drive**, isi URL dan kode rahasia utama.
 
 ## Keamanan
-
-- **Jangan commit `TOKEN` atau `TOKEN_BACA` yang asli.** Isi hanya di Apps Script, bukan di repo.
-  Jika sudah terlanjur ter-commit, ganti kodenya dan deploy ulang.
-- Jangan commit file ekspor data (`.json`, `.xlsx`). `.gitignore` sudah memblokirnya.
-- Login dan peran dijalankan di sisi browser. Itu membatasi tampilan, bukan pengaman sungguhan.
-  Pengaman datanya adalah kode rahasia di Kode.gs.
-- Disarankan memakai repo **private**.
+- Jangan commit `TOKEN` yang asli ke GitHub; isi hanya di Apps Script. `GAS_URL` dan Client ID boleh ada di repo
+  (keduanya tidak memberi akses tanpa login).
+- Jangan commit file ekspor data (`.json`, `.xlsx`); `.gitignore` sudah memblokirnya.
+- Semua pengguna yang login (termasuk Hanya lihat) dapat membaca seluruh data produksi. Itu disengaja.
