@@ -21,6 +21,7 @@ js/
   pages/              Satu file per halaman / fitur
   services/           drive-sync.js (sinkron), auth.js (login dan pengguna), viewer-mode.js, idb.js
   main.js             Titik mulai (dimuat terakhir)
+diagnosa.html         Halaman pemeriksa koneksi ke server (tanpa login)
 gas/Kode.gs           Skrip Google Apps Script (ditempel di script.google.com)
 ```
 Urutan `<script>` di `index.html` tidak boleh diubah sembarangan (semua file memakai fungsi global yang sama;
@@ -47,6 +48,10 @@ Salin Client ID (berakhiran `.apps.googleusercontent.com`) ke dua tempat:
 3. Situs
 Isi `js/config.js` (`window.GAS_URL` = URL `/exec`, `window.GOOGLE_CLIENT_ID`), unggah ke GitHub, tunggu deploy,
 lalu Ctrl+F5. Setelah mengubah CSS/JS, naikkan nomor versi: `sed -i 's/?v=1.0.8/?v=1.0.9/g' index.html`.
+Jika muncul "Tidak bisa terhubung ke server"
+Buka `alamat-situs/diagnosa.html`. Halaman itu memeriksa URL server dari `js/config.js` langkah demi langkah
+(format URL, apakah server terjangkau, apakah browser boleh membaca jawabannya, versi skrip, dan pengiriman login)
+lalu menjelaskan penyebab dan cara memperbaikinya. Tombol "Salin hasil" menyalin laporan tanpa kode rahasia.
 Mengelola pengguna
 Hanya admin yang boleh membuat anggota dan mengubah kata sandi (dijaga di server, bukan hanya disembunyikan).
 Masuk sebagai admin > Pengguna: tambah anggota (nama, sandi, peran; tombol Sandi acak membuat sandi otomatis),
