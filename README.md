@@ -57,6 +57,10 @@ Hanya admin yang boleh membuat anggota dan mengubah kata sandi (dijaga di server
 Masuk sebagai admin > Pengguna: tambah anggota (nama, sandi, peran; tombol Sandi acak membuat sandi otomatis),
 ubah peran (Hanya lihat / Staf), Ubah sandi, atau hapus. Berikan nama pengguna dan sandinya kepada anggota.
 Salah kata sandi 5 kali mengunci akun itu 10 menit.
+Lupa kata sandi / tidak bisa masuk
+Lewat aplikasi: buka `alamat-situs/#pemilik`, masukkan `TOKEN`, lalu menu Pengguna > Ubah sandi.
+Lewat Apps Script (tanpa aplikasi): jalankan `daftarAkun` untuk melihat akun yang ada. Untuk mengganti sandi, isi `NAMA` dan
+`SANDI_BARU` di fungsi `aturSandi`, jalankan, lalu kosongkan lagi `SANDI_BARU`. Jalankan `bukaKunci` bila akun terkunci.
 Jika admin terkunci
 Buka `alamat-situs/#pemilik` dan masukkan `TOKEN`. Untuk mengeluarkan semua orang yang sedang login, jalankan
 fungsi `resetSemuaSesi` di Apps Script. Jika `TOKEN` bocor, ganti dan terbitkan ulang.
