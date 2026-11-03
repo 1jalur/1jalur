@@ -4,7 +4,10 @@ const lgs=()=>{try{return JSON.parse(localStorage.getItem('produksi_sess'))}catc
 const lgme=()=>{const x=lgs();if(!x||!x.u||!x.sid||!(x.exp>Date.now()))return null;return {u:x.u,r:x.r,sid:x.sid}};
 const lgv=id=>(document.getElementById(id)||{}).value||'',lgt=(id,m)=>{const x=document.getElementById(id);if(x)x.textContent=m};
 function lgsess(o){try{localStorage.setItem('produksi_sess',JSON.stringify({u:o.u,r:o.r,sid:o.sid,exp:Math.min(+o.exp||0,Date.now()+12*36e5)}))}catch(e){}}
-function lgbar(){const me=lgme(),b=document.getElementById('lgbar'),sb=document.getElementById('sybtn');if(b)b.innerHTML=me?`<button class="btn g0" onclick="syrefresh()" title="Muat data terbaru dari server">&#8635; Segarkan</button> ${me.r==='admin'?'<button class="btn g0" onclick="lgusers()">&#128100; Pengguna</button> ':''}${me.r==='viewer'?'<span style="font-size:12px;color:var(--mu);margin-right:6px">&#128065; Hanya lihat</span>':''}<button class="btn g0" onclick="lgout()">Keluar (${esc(me.u)})</button>`:'';if(sb&&sb.style)sb.style.display=me&&me.r==='admin'?'':'none'}
+function lgbar(){const me=lgme(),b=document.getElementById('lgbar'),i=document.getElementById('acctinfo'),sb=document.getElementById('sybtn'),ac=document.getElementById('acct'),RL={admin:'Admin',staff:'Staf',viewer:'Hanya lihat'};
+if(i)i.innerHTML=me?`<div class="acu"><i>${esc(String(me.u).charAt(0))}</i><div><b>${esc(me.u)}</b><small>${RL[me.r]||esc(me.r)}</small></div></div>`:'';
+if(b)b.innerHTML=me?`<button class="btn g0" onclick="syrefresh()" title="Muat data terbaru dari server">&#8635; Segarkan</button>${me.r==='admin'?'<button class="btn g0" onclick="lgusers()">&#128100; Pengguna</button>':''}<button class="btn g0" onclick="lgout()">&#10162; Keluar</button>`:'';
+if(sb&&sb.style)sb.style.display=me&&me.r==='admin'?'':'none';if(ac&&ac.style)ac.style.display=me?'':'none'}
 const LGS=(()=>{try{return localStorage.getItem('produksi_lgstyle')||'a'}catch(e){return'a'}})();
 const lgbrand=()=>'<div class="lgbrand"><i>P</i><div><b>PRODUKSI</b><small>Manufactur</small></div></div>';
 function lgform(m){const g=!!window.GOOGLE_CLIENT_ID,own=location.hash==='#pemilik',ok=!!SY.url;
