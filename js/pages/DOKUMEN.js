@@ -1,4 +1,4 @@
-/* Editor DOKUMEN per folder */
+/* Editor SOP per folder */
 function sopclean(h){try{const d=new DOMParser().parseFromString('<body>'+(h||'')+'</body>','text/html');d.querySelectorAll('script,style,iframe,object,embed,link,meta,form').forEach(e=>e.remove());d.querySelectorAll('*').forEach(e=>{[...e.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))e.removeAttribute(a.name)})});return d.body.innerHTML}catch(e){return ''}}
 function sopwords(h){const d=document.createElement('div');d.innerHTML=sopclean(h);const t=(d.textContent||'').trim();return t?t.split(' ').filter(x=>x.trim()).length:0}
 function sopadd(){let k=D.SOP.length+1;const ex=x=>D.SOP.some(f=>f.nama.toLowerCase()===x.toLowerCase());while(ex('Folder SOP baru '+k))k++;D.SOP.push({nama:'Folder SOP baru '+k,html:''});SOPS.o=D.SOP.length-1;q='';save();draw();const e=document.querySelector('#main .sh input');if(e){e.focus();e.select()}}
