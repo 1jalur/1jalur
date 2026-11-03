@@ -15,3 +15,10 @@ aside select{width:100%;background:#17284a;color:#fff;border:1px solid #2a3c63;b
 .top h1{margin:0;font-size:18px}
 .top small{color:var(--mu)}
 main{padding:20px 24px;max-width:1400px}
+.acct{margin-top:14px;padding-top:14px;border-top:1px solid #1f3058}
+.acu{display:flex;align-items:center;gap:10px;padding:2px 10px 12px}
+.acu i{width:36px;height:36px;border-radius:50%;background:#3b6cf0;color:#fff;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;text-transform:uppercase;flex:none}
+.acu b{display:block;color:#fff;font-size:14px;word-break:break-all}
+.acu small{color:#8fa0c4;font-size:12px}
+.acct .btn.g0{display:flex;width:100%;justify-content:flex-start;align-items:center;gap:8px;margin:0 0 6px;background:#17284a;color:#cfd6e6;border:1px solid #2a3c63}
+.acct .btn.g0:hover{background:#1d2e52;color:#fff}
