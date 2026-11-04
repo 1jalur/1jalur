@@ -1,4 +1,5 @@
 PRODUKSI (Manufactur)
+> Panduan lengkap pemasangan: lihat **PANDUAN-PEMASANGAN.md**.
 Aplikasi manajemen produksi: timeline proyek, absensi tim (+ catatan kegiatan harian dan lembur), RAP awal/akhir,
 stok gudang, belanja, operasional (SOP, surat jalan, QC, reimburse), dan investasi.
 Data, akun pengguna, dan foto disimpan di Google Drive lewat Google Apps Script. Situs ini statis (tanpa build).
@@ -15,7 +16,8 @@ index.html            Kerangka halaman dan urutan pemuatan file
 css/                  base, layout, dashboard, components, gantt, pages, login, responsive (responsive.css harus terakhir)
 img/                  Logo, favicon, foto latar login (login-bg.jpg)
 js/
-  config.js           URL server dan Client ID Google (diisi admin)
+  config.js           URL server dan Client ID Google (diisi admin; TIDAK ada di paket zip, salin dari config.contoh.js)
+  config.contoh.js    Contoh isi config.js
   core/               Data, penyimpanan, kolom, konstanta, router, registry halaman
   components/         Tabel, Gantt, folder, cetak, form material, kotak cari
   pages/              Satu file per halaman / fitur
@@ -47,14 +49,14 @@ Salin Client ID (berakhiran `.apps.googleusercontent.com`) ke dua tempat:
 `GOOGLE_CLIENT_ID` di `gas/Kode.gs` (lalu terbitkan ulang versi baru) dan `window.GOOGLE_CLIENT_ID` di `js/config.js`.
 3. Situs
 Isi `js/config.js` (`window.GAS_URL` = URL `/exec`, `window.GOOGLE_CLIENT_ID`), unggah ke GitHub, tunggu deploy,
-lalu Ctrl+F5. Setelah mengubah CSS/JS, naikkan nomor versi: `sed -i 's/?v=1.0.9/?v=1.0.10/g' index.html`.
+lalu Ctrl+F5. Setelah mengubah CSS/JS, naikkan nomor versi: `sed -i 's/?v=1.0.12/?v=1.0.13/g' index.html`.
 Jika muncul "Tidak bisa terhubung ke server"
 Buka `alamat-situs/diagnosa.html`. Halaman itu memeriksa URL server dari `js/config.js` langkah demi langkah
 (format URL, apakah server terjangkau, apakah browser boleh membaca jawabannya, versi skrip, dan pengiriman login)
 lalu menjelaskan penyebab dan cara memperbaikinya. Tombol "Salin hasil" menyalin laporan tanpa kode rahasia.
 Mengelola pengguna
 Hanya admin yang boleh membuat anggota dan mengubah kata sandi (dijaga di server, bukan hanya disembunyikan).
-Masuk sebagai admin > Pengguna: tambah anggota (nama, sandi, peran; tombol Sandi acak membuat sandi otomatis),
+Masuk sebagai admin > klik nama admin di sidebar bawah (tooltip "Kelola pengguna"): tambah anggota (nama, sandi, peran; tombol Sandi acak membuat sandi otomatis),
 ubah peran (Hanya lihat / Staf), Ubah sandi, atau hapus. Berikan nama pengguna dan sandinya kepada anggota.
 Salah kata sandi 5 kali mengunci akun itu 10 menit.
 Lupa kata sandi / tidak bisa masuk
