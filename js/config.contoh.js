@@ -2,7 +2,7 @@
    Pengguna biasa tidak perlu tahu atau mengetik URL ini. */
 
 // URL Web App dari Apps Script (Deploy > Kelola deployment). Harus berakhiran /exec
-window.GAS_URL = 'https://script.google.com/macros/s/AKfycbyFXNSVJO9xq1JFwKt07sxw5VadsZRTLmmabphaUGI0exYMzS_R3oxnKwunlpod534-/exec';
+window.GAS_URL = 'https://script.google.com/macros/s/AKfycbxzSSpSzFdORMHqq3eftKfYSakmuKIBBVL3Ha3Nl3lLT7Hi425BHzjEVoaDKOZ2nJxb/exec';
 
 // Client ID OAuth dari Google Cloud Console, untuk tombol "Masuk dengan Google" khusus admin.
 // Kosongkan jika belum dibuat (admin masih bisa masuk lewat kode pemilik di alamat #pemilik).
