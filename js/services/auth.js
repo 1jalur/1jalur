@@ -22,8 +22,8 @@ async function lgin(){const u=lgv('lgu').trim().toLowerCase(),p=lgv('lgp');if(!u
 async function lgowner(){const t=sytk(lgv('lgo'));if(!t)return lgt('lge','Isi kode rahasia pemilik.');lgt('lge','Memeriksa…');lgfinish(await sypost({action:'loginOwner',token:t,sid:'-'}))}
 function lgfinish(j){if(!j||!j.ok||!j.sid)return lgt('lge',(j&&j.error)||'Gagal masuk.');lgsess(j);lgdone(1)}
 function lgdone(fresh){const o=document.getElementById('lg');if(o&&o.remove)o.remove();lgsnap();lgbar();syinit();draw();if(fresh)syfirst()}
-function lgout(){const sid=lgsid();if(sid)sypost({action:'logout',sid});VSNAP='';try{localStorage.removeItem('produksi_sess')}catch(e){}lgucl();syclose();lgbar();lgshow()}
-function lgexp(){if(!lgme())return;VSNAP='';try{localStorage.removeItem('produksi_sess')}catch(e){}lgucl();syclose();lgbar();lgshow('Sesi berakhir. Silakan masuk lagi.')}
+function lgout(){}
+function lgexp(){}
 function lgucl(){const d=document.getElementById('lgp');if(d&&d.remove)d.remove()}
 /* ===== Kelola pengguna (khusus admin) ===== */
 async function lgusers(){const me=lgme();if(!me||me.r!=='admin')return;lgucl();const d=document.createElement('div');d.id='lgp';d.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:70;display:flex;align-items:center;justify-content:center;padding:16px';d.innerHTML='<div class="pn" style="max-width:640px;width:100%">Memuat daftar pengguna…</div>';document.body.appendChild(d);const [j,i]=await Promise.all([syget('users'),syget('info')]);if(!j.ok){lgucl();alert(j.error||'Gagal memuat pengguna.');return}LGUS=j.users||[];LGINFO={ts:i.ok?+i.ts||0:0};lgutab()}
