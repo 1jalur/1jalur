@@ -38,4 +38,4 @@ async function lgadd(){const u=lgv('lau').trim().toLowerCase(),p=lgv('lap'),r=lg
 async function lgsetrole(u,r){const j=await sypost({action:'setrole',u,r});lgrefresh(j.ok?'Peran "'+u+'" diubah.':(j.error||'Gagal mengubah peran.'))}
 async function lgreset(u){const p=prompt('Kata sandi baru untuk "'+u+'" (minimal 6 karakter):');if(p===null)return;if(p.length<6){alert('Kata sandi minimal 6 karakter.');return}const j=await sypost({action:'setpass',u,p});lgrefresh(j.ok?'Kata sandi "'+u+'" sudah diganti.':(j.error||'Gagal mengganti kata sandi.'))}
 async function lgdel(u){if(!confirm('Hapus pengguna "'+u+'"?'))return;const j=await sypost({action:'deluser',u});lgrefresh(j.ok?'Pengguna "'+u+'" dihapus.':(j.error||'Gagal menghapus.'))}
-function lgcheck(){if(lgme()){lgsnap();lgbar()}else lgshow()}
+function lgcheck(){lgsnap();lgbar()}
